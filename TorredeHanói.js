@@ -34,6 +34,12 @@ function exibirPinos() {
 
 // --- Lógica do jogo ---
 function moverDisco(pinoOrigem, pinoDestino) {
+  // Verifica se a entrada é um número válido (1, 2 ou 3)
+  if (isNaN(pinoOrigem) || isNaN(pinoDestino) || pinoOrigem < 1 || pinoOrigem > 3 || pinoDestino < 1 || pinoDestino > 3) {
+    console.log("Entrada inválida. Digite 1, 2 ou 3 para os pinos.");
+    return false;
+  }
+  
   // Converte a entrada do usuário (1, 2 ou 3) para índices de array (0, 1 ou 2)
   const origem = pinos[pinoOrigem - 1];
   const destino = pinos[pinoDestino - 1];
@@ -66,7 +72,6 @@ function verificarVitoria() {
 // --- Função principal (laço do jogo) ---
 function jogar() {
   // A biblioteca 'prompt-sync' é usada para capturar a entrada do usuário no terminal.
-  // Você pode instalá-la com o comando: npm install prompt-sync
   const prompt = require('prompt-sync')();
 
   // Permite ao usuário escolher o número de discos no início
@@ -81,13 +86,16 @@ function jogar() {
 
   // Loop principal do jogo
   while (!verificarVitoria()) {
-    console.log("Escolha um movimento:");
-    const origem = parseInt(prompt("Mover de qual pino? (1, 2 ou 3): "));
-    const destino = parseInt(prompt("Mover para qual pino? (1, 2 ou 3): "));
-
-    if (moverDisco(origem, destino)) {
-      exibirPinos();
+    let movimentoValido = false;
+    while (!movimentoValido) {
+      console.log("Escolha um movimento:");
+      const origem = parseInt(prompt("Mover de qual pino? (1, 2 ou 3): "));
+      const destino = parseInt(prompt("Mover para qual pino? (1, 2 ou 3): "));
+      
+      // A função moverDisco retorna true para um movimento válido e false para um inválido.
+      movimentoValido = moverDisco(origem, destino);
     }
+    exibirPinos();
   }
 
   console.log("--- Parabéns! Você venceu o jogo! ---");
